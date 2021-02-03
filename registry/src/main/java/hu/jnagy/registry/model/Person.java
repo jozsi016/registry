@@ -2,6 +2,7 @@ package hu.jnagy.registry.model;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Objects;
 
 public class Person implements Comparable<Person> {
     String title;
@@ -56,4 +57,16 @@ public class Person implements Comparable<Person> {
         return year;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return Objects.equals(title, person.title) && Objects.equals(lastName, person.lastName) && Objects.equals(firstName, person.firstName) && gender == person.gender && Objects.equals(dateOfBirth, person.dateOfBirth);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, lastName, firstName, gender, dateOfBirth);
+    }
 }

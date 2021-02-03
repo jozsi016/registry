@@ -31,5 +31,4 @@ public interface IRegistry {
 
     Map<Integer, Person> getPersons();
 
-    void toJason();
 }
