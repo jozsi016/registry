@@ -15,18 +15,18 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class RegistryTest {
-    Registry registry;
+    Registry systemUnderTest;
 
     @Before
     public void setUp() {
-        registry = new Registry();
-        Populator.populate(registry);
+        systemUnderTest = new Registry();
+        Populator.populate(systemUnderTest);
     }
 
     @Test
     public void shouldGiveBackEveryPerson() {
         //Given
-        Map<Integer, Person> systemUnderTest = registry.getPersons();
+        Map<Integer, Person> systemUnderTest = this.systemUnderTest.getPersons();
         Person expected = new Person("Developer", "Brandon", "Orbán", Gender.MALE, LocalDate.of(1992, 10, 02));
         //When
         Person actual = systemUnderTest.get(10);
@@ -40,7 +40,7 @@ public class RegistryTest {
     public void shouldSortedByBirthday() {
         //Given
         Person expected = new Person("QA", "Zsófia", "Kovacs", Gender.FEMALE, LocalDate.of(1999, 04, 18));
-        List<Person> systemUnderTest = registry.sortByBirthday();
+        List<Person> systemUnderTest = this.systemUnderTest.sortByBirthday();
         //When
         Person actual = systemUnderTest.get(10);
         //Then
@@ -52,7 +52,7 @@ public class RegistryTest {
         //Given
         int expected = 264;
         //When
-        int actual = registry.getCalcSumAgeMale();
+        int actual = systemUnderTest.getCalcSumAgeMale();
         //Then
         assertThat(actual, is(expected));
     }
@@ -63,9 +63,19 @@ public class RegistryTest {
         DecimalFormat df = new DecimalFormat("#.##");
         double expected = 37.71;
         //When
-        double actual = Double.valueOf(df.format(registry.getCalcAvgAgeMale()));
+        double actual = Double.valueOf(df.format(systemUnderTest.getCalcAvgAgeMale()));
         //Then
         assertThat(actual, is(expected));
-        ;
+    }
+
+    @Test
+    public void shouldBeEmptyWhenClearCalledOnRegistry(){
+        //Given
+        boolean empty =  true;
+        //When
+        systemUnderTest.clear();
+        boolean actual = systemUnderTest.isEmpty();
+        //Then
+        assertThat(actual, is(empty));
     }
 }
