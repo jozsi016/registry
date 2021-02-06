@@ -1,6 +1,11 @@
 package hu.jnagy.registry.service;
 
 
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import hu.jnagy.registry.model.Gender;
+import hu.jnagy.registry.model.Person;
+
 import java.beans.XMLEncoder;
 import java.io.*;
 import java.time.LocalDate;
@@ -8,10 +13,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import hu.jnagy.registry.model.Gender;
-import hu.jnagy.registry.model.Person;
 
 public class RegistryMap extends HashMap<Integer, Person> implements IRegistry {
 
@@ -25,7 +26,7 @@ public class RegistryMap extends HashMap<Integer, Person> implements IRegistry {
 
     @Override
     public List<Person> sortByLastName() {
-        List <Person> result = new ArrayList<Person>(this.values());
+        List<Person> result = new ArrayList<Person>(this.values());
         Collections.sort(result);
         return result;
     }
@@ -33,9 +34,9 @@ public class RegistryMap extends HashMap<Integer, Person> implements IRegistry {
     @Override
     public List<Person> sortByGender() {
         List<Person> result = new ArrayList<Person>(this.values());
-        Collections.sort(result, new Comparator<Person>(){
+        Collections.sort(result, new Comparator<Person>() {
             @Override
-            public int compare(Person o1, Person o2){
+            public int compare(Person o1, Person o2) {
                 return o1.getGender().compareTo(o2.getGender());
             }
         });
@@ -45,14 +46,15 @@ public class RegistryMap extends HashMap<Integer, Person> implements IRegistry {
     @Override
     public List<Person> sortByBirthday() {
         List<Person> result = new ArrayList<Person>(this.values());
-        Collections.sort(result, new Comparator<Person>(){
+        Collections.sort(result, new Comparator<Person>() {
             @Override
-            public int compare(Person o1,Person o2){
+            public int compare(Person o1, Person o2) {
                 return MonthAndDay(o1.getDateOfBirth()).compareTo(MonthAndDay(o2.getDateOfBirth()));
             }
-            public String MonthAndDay (LocalDate date) {
+
+            public String MonthAndDay(LocalDate date) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM,dd");
-                String formattedDate= date.format(formatter);
+                String formattedDate = date.format(formatter);
                 return formattedDate;
             }
         });
@@ -61,24 +63,24 @@ public class RegistryMap extends HashMap<Integer, Person> implements IRegistry {
 
     @Override
     public int getCalcSumAgeMale() {
-        Stream <Person> result = this.values().stream();
-        return result.filter(e-> e.getGender() == Gender.MALE)
-                .mapToInt(e->e.getAge()).sum();
+        Stream<Person> result = this.values().stream();
+        return result.filter(e -> e.getGender() == Gender.MALE)
+                .mapToInt(e -> e.getAge()).sum();
     }
 
     @Override
     public double getCalcAvgAgeMale() {
-        Stream <Person> result = this.values().stream();
-        return result.filter(e-> e.getGender() == Gender.MALE)
-                .mapToDouble(e->e.getAge()).average().getAsDouble();
+        Stream<Person> result = this.values().stream();
+        return result.filter(e -> e.getGender() == Gender.MALE)
+                .mapToDouble(e -> e.getAge()).average().getAsDouble();
     }
 
     @Override
     public void addPerson(Person p1) {
-        int key=0;
-        if(!(this.isEmpty())){
+        int key = 0;
+        if (!(this.isEmpty())) {
             Set<Integer> keySets = this.keySet();
-            key=Collections.max(keySets);
+            key = Collections.max(keySets);
             key++;
         }
         this.put(key, p1);
@@ -105,11 +107,11 @@ public class RegistryMap extends HashMap<Integer, Person> implements IRegistry {
     }
 
 
-     public void toXML(){
-        XMLEncoder encoder=null;
-        try{
-        encoder=new XMLEncoder(new BufferedOutputStream(new FileOutputStream("Person.xml")));
-        }catch(FileNotFoundException fileNotFound){
+    public void toXML() {
+        XMLEncoder encoder = null;
+        try {
+            encoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream("Person.xml")));
+        } catch (FileNotFoundException fileNotFound) {
             System.out.println("ERROR: While Creating or Opening the File dvd.xml");
         }
         encoder.writeObject(this);

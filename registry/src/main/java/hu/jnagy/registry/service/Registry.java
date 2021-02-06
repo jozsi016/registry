@@ -14,6 +14,7 @@ public class Registry implements IRegistry{
         personList.add(p1);
     }
 
+    @Override
     public Map<Integer, Person> getPersons() {
         Map<Integer, Person> map = new HashMap<>();
         int i = 0;
@@ -24,24 +25,27 @@ public class Registry implements IRegistry{
         return map;
     }
 
+    @Override
     public List<Person> sortByLastName() {
         Collections.sort(personList);
         return personList;
     }
 
+    @Override
     public List<Person> sortByGender() {
         Collections.sort(personList, Comparator.comparing(Person::getGender));
         return personList;
     }
 
+    @Override
     public boolean removePerson(Person p1) {
         return personList.remove(p1);
     }
 
+    @Override
     public void clear() {
         personList.removeAll(personList);
     }
-
 
     @Override
     public Set<Person> filterByGender(Gender gender) {
